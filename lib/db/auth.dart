@@ -66,11 +66,13 @@ class Auth{
 }
 Future<String>addItem({String name,String price,String description,String image})async{
     try{
-      await _firestore.collection('items').doc().set({
+      DocumentReference documentReference = _firestore.collection('items').doc();
+      await documentReference.set({
       'name': name,
       'price': price,
       'description': description,
       'image':image,
+      'id':documentReference.id,
       'time': Timestamp.now(),
       });
       return "Added succesfull";
