@@ -4,18 +4,18 @@ import 'package:v1/components/round_button.dart';
 import 'package:provider/provider.dart';
 import 'package:v1/db/auth.dart';
 
-class LoginScreen extends StatefulWidget {
+class AddItem extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _AddItemState createState() => _AddItemState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _AddItemState extends State<AddItem> {
   bool showSpinner = false;
-  String email;
-  String password;
+  String name,price,image,description;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:  AppBar(title: Text('ADD ITEM'),),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
@@ -25,58 +25,66 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[ 
-               Flexible(
-                child: Container(
-                color:Colors.grey[50],
-                height: 200.0,
-                child:Text("LOGIN"),
-                
-                  ),
-              ),
               SizedBox(
                 height: 48.0,
               ),
               TextField(
+                decoration: InputDecoration(
+                hintText: 'Enter item title'
+                ),
                 keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
-                  email = value;
+                  name = value;
                 },
-                //decoration: null,
               ),
               SizedBox(
                 height: 8.0,
               ),
               TextField(
-                obscureText: true,
+                decoration: InputDecoration(
+                hintText: 'Enter item price'
+                ),
                 textAlign: TextAlign.center,
                 onChanged: (value) {
-                  password = value;
+                  price = value;
                 },
-                //decoration:null,
+              ),
+               TextField(
+                decoration: InputDecoration(
+                hintText: 'Add  image'
+                ),
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  image = value;
+                },
+              ),
+               TextField(
+                decoration: InputDecoration(
+                hintText: 'Enter item description'
+                ),
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  description = value;
+                },
               ),
               SizedBox(
                 height: 24.0,
               ),
                 RoundedButton(
                 colour: Colors.blueAccent,
-                title: 'LogIn',
+                title: 'Create item',
                   widget:(){
-                  context.read<Auth>().singIn(
-                    email:email.trim(),
-                    password: password.trim()
+                  context.read<Auth>().addItem(
+                    name:name.trim(),
+                    price: price.trim(),
+                    description: description.trim(),
+                    image: image.trim(),
                   );
                   }
               ),
                SizedBox(
                 height: 24.0,
-              ),
-
-              Center(
-                child: Container(
-                  child: GestureDetector(child:Text('Not yet registered?',style: TextStyle(color:Colors.grey[500]),),
-                  onTap:()=>Navigator.pushNamed(context, '/register')),
-                ),
               ),
             ],
           ),

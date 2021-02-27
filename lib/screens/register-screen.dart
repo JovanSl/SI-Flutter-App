@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:v1/components/round_button.dart';
+import 'package:provider/provider.dart';
+import 'package:v1/db/auth.dart';
 
 
 
@@ -11,7 +12,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  //final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   String email;
   String password;
@@ -34,15 +34,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child:Text("REGISTER"),
                   ),
               ),
-              // Flexible(
-              //   child: Hero(
-              //     tag: 'logo',
-              //     child: Container(
-              //       height: 200.0,
-              //       child:null,
-              //     ),
-              //   ),
-              // ),
               SizedBox(
                 height: 48.0,
               ),
@@ -72,8 +63,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 colour: Colors.blueAccent,
                 title: 'Register',
                   widget:(){
-                    setState(() {
-                  Navigator.pushNamed(context, '/login');});
+                    context.read<Auth>().singUp(
+                    email:email.trim(),
+                    password: password.trim()
+                  );
                   }
               ),
             ],

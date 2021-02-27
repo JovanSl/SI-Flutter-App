@@ -6,6 +6,7 @@ import 'screens/login-screen.dart';
 import 'screens/register-screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:v1/screens/home-screen.dart';
+import 'package:v1/screens/add-item-screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,7 @@ void main() async {
   runApp(ver1());
 }
 
+// ignore: camel_case_types
 class ver1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) { 
@@ -22,10 +24,13 @@ class ver1 extends StatelessWidget {
       StreamProvider(create:(context)=>context.read<Auth>().authStateChanges)
     ],
     child:MaterialApp(
+      theme: ThemeData(primaryColor: Colors.lightBlue,canvasColor: Colors.lightBlue),
+       debugShowCheckedModeBanner: false, 
       home: AuthenticationWrapper(),
             routes: {
             '/login': (context) => LoginScreen(),
             '/register': (context) => RegisterScreen(),
+            '/addItem':(context)=>AddItem(),
           }),
     );
         }
