@@ -1,6 +1,0 @@
-{
-    "timeline.excludeSources": [],
-    "dart.devToolsReuseWindows": false,
-    "dart.embedDevTools": false,
-    "dart.devToolsBrowser": "default"
-}
