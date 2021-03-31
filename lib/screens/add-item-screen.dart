@@ -1,95 +1,208 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:v1/components/round_button.dart';
 import 'package:provider/provider.dart';
 import 'package:v1/db/auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'item-screen.dart';
 
 class AddItem extends StatefulWidget {
+  final String titleText, priceText, descriptionText, networkImage, itemId, image=null;
+  AddItem(this.titleText, 
+          this.priceText,
+          this.descriptionText,
+          this.networkImage, 
+          this.itemId,
+          {Key key}
+          )
+          : super(key: key);
   @override
   _AddItemState createState() => _AddItemState();
 }
 
 class _AddItemState extends State<AddItem> {
+  File _image;
+  final picker = ImagePicker();
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   bool showSpinner = false;
-  String name,price,image,description;
+  String name, price, image, description;
   @override
   Widget build(BuildContext context) {
+    var titleTextController = 
+      TextEditingController(text: widget.titleText);
+    var priceTextController =
+      TextEditingController(text: widget.priceText);
+    var descriptionTextController =
+      TextEditingController(text: widget.descriptionText);
+    image = widget.networkImage;
     return Scaffold(
-      appBar:  AppBar(title: Text('ADD ITEM'),),
+      resizeToAvoidBottomInset: false, 
+      appBar: AppBar(
+        title: Text('ADD ITEM'),
+      ),
       backgroundColor: Colors.white,
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[ 
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                hintText: 'Enter item title'
+      body: SingleChildScrollView(
+              child: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SizedBox(
+                  height: 48.0,
                 ),
-                keyboardType: TextInputType.emailAddress,
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  name = value;
-                },
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                decoration: InputDecoration(
-                hintText: 'Enter item price'
+                TextField(
+                  controller: titleTextController,
+                  decoration: InputDecoration(hintText: 'Enter item title'),
+                  textAlign: TextAlign.center,
+                  onChanged: (value) {
+                    titleTextController.text = value;
+                    titleTextController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: titleTextController.text.length));
+                  },
                 ),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  price = value;
-                },
-              ),
-               TextField(
-                decoration: InputDecoration(
-                hintText: 'Add  image'
+                SizedBox(
+                  height: 8.0,
                 ),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  image = value;
-                },
-              ),
-               TextField(
-                decoration: InputDecoration(
-                hintText: 'Enter item description'
+                TextField(
+                  controller: priceTextController,
+                  decoration: InputDecoration(hintText: 'Enter item price'),
+                  textAlign: TextAlign.center,
+                  onChanged: (value) {
+                    priceTextController.text = value;
+                    priceTextController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: priceTextController.text.length));
+                  },
                 ),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  description = value;
-                },
-              ),
-              SizedBox(
-                height: 24.0,
-              ),
-                RoundedButton(
-                colour: Colors.blueAccent,
-                title: 'Create item',
-                  widget:(){
-                  context.read<Auth>().addItem(
-                    name:name.trim(),
-                    price: price.trim(),
-                    description: description.trim(),
-                    image: image.trim(),
-                  );
-                  }
-              ),
-               SizedBox(
-                height: 24.0,
-              ),
-            ],
+                SizedBox(
+                  height: 8.0,
+                ),
+                TextField(
+                  controller: descriptionTextController,
+                  decoration: InputDecoration(hintText: 'Enter item description'),
+                  textAlign: TextAlign.center,
+                  onChanged: (value) {
+                    descriptionTextController.text = value;
+                    descriptionTextController.selection =
+                        TextSelection.fromPosition(TextPosition(
+                            offset: descriptionTextController.text.length));
+                  },
+                ),
+                SizedBox(
+                  height: 24.0,
+                ),
+                Container(
+                  height: 300,
+                  child: ImageDisplay(image, _image, getImage)),
+                SizedBox(
+                  height: 24.0,
+                ),
+                SizedBox(
+                  height: 24.0,
+                ),
+                (widget.itemId.isNotEmpty) ? RoundedButton(
+                        colour: Colors.greenAccent,
+                        title: 'Update item',
+                        widget: () {
+                          if (titleTextController.text.isNotEmpty &&
+                              priceTextController.text.isNotEmpty &&
+                              descriptionTextController.text.isNotEmpty) {
+                            context.read<Auth>().editItem(
+                                  name: titleTextController.text.trim(),
+                                  price: priceTextController.text.trim(),
+                                  description:
+                                      descriptionTextController.text.trim(),
+                                  image: (_image==null)? image :_image,
+                                  itemId: widget.itemId,
+                                );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ItemScreen(
+                                    itemId: widget.itemId,
+                                  ),
+                                ));
+                          } else {
+                            print("All fields must have value");
+                          }
+                        })
+                    : RoundedButton(
+                        colour: Colors.blueAccent,
+                        title: 'Create item',
+                        widget: () {
+                          context.read<Auth>().addItem(
+                                name: titleTextController.text.trim(),
+                                price: priceTextController.text.trim(),
+                                description:
+                                    descriptionTextController.text.trim(),
+                                image: _image,
+                              );
+                          Navigator.pushNamed(context, '/home');
+                        }),
+                SizedBox(
+                  height: 24.0,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+}
+
+class ImageDisplay extends StatefulWidget {
+  final String image;
+  final File _image;
+  final Function getImage;
+  ImageDisplay(this.image, this._image, this.getImage);
+  @override
+  _ImageDisplayState createState() => _ImageDisplayState();
+}
+
+class _ImageDisplayState extends State<ImageDisplay> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.image.isNotEmpty && widget._image==null) {
+      return Container(
+        child: GestureDetector(
+          child: Image.network(widget.image),
+          onTap: () {
+            widget.getImage();
+          },
+        ),
+      );
+    } else if (widget._image != null) {
+      return Container(
+        child: GestureDetector(
+          child: Image.file(widget._image),
+          onTap: () {
+            widget.getImage();
+          },
+        ),
+      );
+    } else {
+      return Container(
+       child: FloatingActionButton(
+        onPressed: () {
+          widget.getImage();
+        },
+        tooltip: 'Pick Image',
+        child: Icon(Icons.add_a_photo),
+      ));
+    }
   }
 }

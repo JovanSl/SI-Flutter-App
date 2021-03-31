@@ -7,15 +7,16 @@ import 'screens/register-screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:v1/screens/home-screen.dart';
 import 'package:v1/screens/add-item-screen.dart';
+import 'screens/item-screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ver1());
+  runApp(Ver1());
 }
 
 // ignore: camel_case_types
-class ver1 extends StatelessWidget {
+class Ver1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) { 
     return MultiProvider(providers: [
@@ -28,9 +29,11 @@ class ver1 extends StatelessWidget {
        debugShowCheckedModeBanner: false, 
       home: AuthenticationWrapper(),
             routes: {
+            '/home':(context) =>Home(),
             '/login': (context) => LoginScreen(),
             '/register': (context) => RegisterScreen(),
-            '/addItem':(context)=>AddItem(),
+            '/addItem':(context)=>AddItem("","","","",""),
+            '/itemScreen':(context)=>ItemScreen(),
           }),
     );
         }
