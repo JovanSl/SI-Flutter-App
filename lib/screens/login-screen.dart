@@ -24,14 +24,13 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[ 
-               Flexible(
+            children: <Widget>[
+              Flexible(
                 child: Container(
-                color:Colors.grey[50],
-                height: 200.0,
-                child:Text("LOGIN"),
-                
-                  ),
+                  color: Colors.grey[50],
+                  height: 200.0,
+                  child: Text("LOGIN"),
+                ),
               ),
               SizedBox(
                 height: 48.0,
@@ -58,24 +57,25 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 24.0,
               ),
-                RoundedButton(
-                colour: Colors.blueAccent,
-                title: 'LogIn',
-                  widget:(){
-                  context.read<Auth>().singIn(
-                    email:email.trim(),
-                    password: password.trim()
-                  );
-                  }
-              ),
-               SizedBox(
+              RoundedButton(
+                  colour: Colors.blueAccent,
+                  title: 'LogIn',
+                  widget: () {
+                    context
+                        .read<Auth>()
+                        .singIn(email: email.trim(), password: password.trim());
+                  }),
+              SizedBox(
                 height: 24.0,
               ),
-
               Center(
                 child: Container(
-                  child: GestureDetector(child:Text('Not yet registered?',style: TextStyle(color:Colors.grey[500]),),
-                  onTap:()=>Navigator.pushNamed(context, '/register')),
+                  child: GestureDetector(
+                      child: Text(
+                        'Not yet registered?',
+                        style: TextStyle(color: Colors.grey[500]),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, '/register')),
                 ),
               ),
             ],

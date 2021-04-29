@@ -4,8 +4,6 @@ import 'package:v1/components/round_button.dart';
 import 'package:provider/provider.dart';
 import 'package:v1/db/auth.dart';
 
-
-
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -28,11 +26,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Flexible(
-                  child: Container(
-                    color:Colors.grey[50],
-                    height: 200.0,
-                    child:Text("REGISTER"),
-                  ),
+                child: Container(
+                  color: Colors.grey[50],
+                  height: 200.0,
+                  child: Text("REGISTER"),
+                ),
               ),
               SizedBox(
                 height: 48.0,
@@ -59,16 +57,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SizedBox(
                 height: 24.0,
               ),
-               RoundedButton(
-                colour: Colors.blueAccent,
-                title: 'Register',
-                  widget:(){
-                    context.read<Auth>().singUp(
-                    email:email.trim(),
-                    password: password.trim()
-                  );
-                  }
-              ),
+              RoundedButton(
+                  colour: Colors.blueAccent,
+                  title: 'Register',
+                  widget: () {
+                    context
+                        .read<Auth>()
+                        .singUp(email: email.trim(), password: password.trim());
+                  }),
             ],
           ),
         ),

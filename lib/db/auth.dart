@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:async';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:v1/models/user.dart';
 
 class Auth {
   String role = '';
@@ -9,6 +9,26 @@ class Auth {
   final FirebaseAuth _firebaseAuth;
   final _firestore = FirebaseFirestore.instance;
 
+  Future<dynamic>placeOrder(cartItem,totalPrice)async{
+  var user;
+      user = await getCurrentUID();
+    try {
+      DocumentReference documentReference =
+      _firestore.collection('orders').doc();
+      await documentReference.set({
+        'total':totalPrice,
+        'order': cartItem,
+        'id': documentReference.id,
+        'time': Timestamp.now(),
+        'userId': user,
+      });
+      return "Added succesfull";
+    } catch (e) {
+      return e.toString();
+    }
+    
+
+  }
   Future<String> userRole() async {
     var user;
     try {
@@ -21,6 +41,7 @@ class Auth {
             .then((DocumentSnapshot userDetail) {
           if (userDetail.exists) {
             role = userDetail.data()['role'];
+            return Users.fromData(userDetail.data());
           } else {
             return Future.value('No user Data');
           }
@@ -160,4 +181,8 @@ class Auth {
         .then((value) => print("Item Deleted"))
         .catchError((error) => print("Failed to delete item: $error"));
   }
+
+  Future<void> signOut() async {
+  await FirebaseAuth.instance.signOut();
+}
 }

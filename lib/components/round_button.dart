@@ -29,19 +29,3 @@ class RoundedButton extends StatelessWidget {
     );
   }
 }
-//  Center(
-//           child: Container(
-//             child: RoundedButton(
-//                 widget:()=>
-//                 context.read<Auth>().singOut(), 
-//                 title:"LOG OUT",
-//                 colour: Color(0xFFF44336),
-//             ),
-//           ),
-//         ),
-// RoundedButton(
-//                 widget:()=>
-//                 Navigator.pushNamed(context, '/addItem'), 
-//                 title:"Add new menu item",
-//                 colour: Color(0xFFF44336),
-//             )

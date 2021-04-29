@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:v1/components/round_button.dart';
 import 'package:provider/provider.dart';
 import 'package:v1/db/auth.dart';
 import 'package:image_picker/image_picker.dart';
-import 'item-screen.dart';
+import 'package:v1/screens/home-screen.dart';
 
 class AddItem extends StatefulWidget {
-  final String titleText, priceText, descriptionText, networkImage, itemId, image=null;
-  AddItem(this.titleText, 
-          this.priceText,
-          this.descriptionText,
-          this.networkImage, 
-          this.itemId,
-          {Key key}
-          )
-          : super(key: key);
+  final String titleText,
+      priceText,
+      descriptionText,
+      networkImage,
+      itemId,
+      image = null;
+  AddItem(this.titleText, this.priceText, this.descriptionText,
+      this.networkImage, this.itemId,
+      {Key key})
+      : super(key: key);
   @override
   _AddItemState createState() => _AddItemState();
 }
@@ -39,21 +41,19 @@ class _AddItemState extends State<AddItem> {
   String name, price, image, description;
   @override
   Widget build(BuildContext context) {
-    var titleTextController = 
-      TextEditingController(text: widget.titleText);
-    var priceTextController =
-      TextEditingController(text: widget.priceText);
+    var titleTextController = TextEditingController(text: widget.titleText);
+    var priceTextController = TextEditingController(text: widget.priceText);
     var descriptionTextController =
-      TextEditingController(text: widget.descriptionText);
+        TextEditingController(text: widget.descriptionText);
     image = widget.networkImage;
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('ADD ITEM'),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-              child: ModalProgressHUD(
+        child: ModalProgressHUD(
           inAsyncCall: showSpinner,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -66,7 +66,9 @@ class _AddItemState extends State<AddItem> {
                 ),
                 TextField(
                   controller: titleTextController,
-                  decoration: InputDecoration(hintText: 'Enter item title'),
+                  decoration: InputDecoration(
+                      hintText: 'Enter item title',
+                      border: OutlineInputBorder()),
                   textAlign: TextAlign.center,
                   onChanged: (value) {
                     titleTextController.text = value;
@@ -78,9 +80,15 @@ class _AddItemState extends State<AddItem> {
                   height: 8.0,
                 ),
                 TextField(
+                  keyboardType: TextInputType.number,
                   controller: priceTextController,
-                  decoration: InputDecoration(hintText: 'Enter item price'),
+                  decoration: InputDecoration(
+                      hintText: 'Enter item price',
+                      border: OutlineInputBorder()),
                   textAlign: TextAlign.center,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
                   onChanged: (value) {
                     priceTextController.text = value;
                     priceTextController.selection = TextSelection.fromPosition(
@@ -91,9 +99,13 @@ class _AddItemState extends State<AddItem> {
                   height: 8.0,
                 ),
                 TextField(
+                  maxLines: 4,
                   controller: descriptionTextController,
-                  decoration: InputDecoration(hintText: 'Enter item description'),
+                  decoration: InputDecoration(
+                      hintText: 'Enter item description',
+                      border: OutlineInputBorder()),
                   textAlign: TextAlign.center,
+                  keyboardType: TextInputType.multiline,
                   onChanged: (value) {
                     descriptionTextController.text = value;
                     descriptionTextController.selection =
@@ -104,16 +116,15 @@ class _AddItemState extends State<AddItem> {
                 SizedBox(
                   height: 24.0,
                 ),
-                Container(
-                  height: 300,
-                  child: ImageDisplay(image, _image, getImage)),
+                Container(child: ImageDisplay(image, _image, getImage)),
                 SizedBox(
                   height: 24.0,
                 ),
                 SizedBox(
                   height: 24.0,
                 ),
-                (widget.itemId.isNotEmpty) ? RoundedButton(
+                (widget.itemId.isNotEmpty)
+                    ? RoundedButton(
                         colour: Colors.greenAccent,
                         title: 'Update item',
                         widget: () {
@@ -125,15 +136,13 @@ class _AddItemState extends State<AddItem> {
                                   price: priceTextController.text.trim(),
                                   description:
                                       descriptionTextController.text.trim(),
-                                  image: (_image==null)? image :_image,
+                                  image: (_image == null) ? image : _image,
                                   itemId: widget.itemId,
                                 );
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ItemScreen(
-                                    itemId: widget.itemId,
-                                  ),
+                                  builder: (context) => Home(),
                                 ));
                           } else {
                             print("All fields must have value");
@@ -176,8 +185,9 @@ class ImageDisplay extends StatefulWidget {
 class _ImageDisplayState extends State<ImageDisplay> {
   @override
   Widget build(BuildContext context) {
-    if (widget.image.isNotEmpty && widget._image==null) {
+    if (widget.image.isNotEmpty && widget._image == null) {
       return Container(
+        height: 250,
         child: GestureDetector(
           child: Image.network(widget.image),
           onTap: () {
@@ -187,6 +197,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
       );
     } else if (widget._image != null) {
       return Container(
+        height: 250,
         child: GestureDetector(
           child: Image.file(widget._image),
           onTap: () {
@@ -196,7 +207,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
       );
     } else {
       return Container(
-       child: FloatingActionButton(
+          child: FloatingActionButton(
         onPressed: () {
           widget.getImage();
         },
