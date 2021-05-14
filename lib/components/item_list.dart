@@ -105,14 +105,14 @@ class SingleItem extends StatelessWidget {
                     style: const TextStyle(fontSize: 17, color: Colors.grey),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 6,
                   ),
                   Container(
-                    width: 200,
-                    height: 65,
+                    width: 210,
+                    height: 62,
                     child: Text(
                       description,
-                      style: const TextStyle(fontSize: 20, color: Colors.black),
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
                     ),
                   ),
                 ],

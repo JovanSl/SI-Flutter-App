@@ -11,6 +11,7 @@ import 'package:v1/screens/add-item-screen.dart';
 import 'screens/item-screen.dart';
 import 'screens/cart-screen.dart';
 import 'screens/orders-screen.dart';
+import 'screens/profile-screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -35,7 +36,8 @@ class Ver1 extends StatelessWidget {
       ],
       child: MaterialApp(
           theme: ThemeData(
-              primaryColor: Colors.lightBlue, canvasColor: Colors.lightBlue),
+            fontFamily: 'Nunito-Bold',
+              primaryColor: Colors.black),
           debugShowCheckedModeBanner: false,
           home: AuthenticationWrapper(),
           routes: {
@@ -46,11 +48,11 @@ class Ver1 extends StatelessWidget {
             '/itemScreen': (context) => ItemScreen(),
             '/cart': (context) => CartScreen(),
             '/orders':(context)=>OrdersScreen(),
+            '/profile':(context)=>ProfileScreen(),
           }),
     );
   }
 }
-
 class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

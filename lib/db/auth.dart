@@ -29,8 +29,9 @@ class Auth {
     
 
   }
-  Future<String> userRole() async {
-    var user;
+  Future<List> userInfo() async {
+    var user,address,name;
+    var userInfo=[];
     try {
       user = await getCurrentUID();
       try {
@@ -41,17 +42,22 @@ class Auth {
             .then((DocumentSnapshot userDetail) {
           if (userDetail.exists) {
             role = userDetail.data()['role'];
-            return Users.fromData(userDetail.data());
+            name=userDetail.data()['fullname'];
+            address=userDetail.data()['adress'];
+            userInfo.add(role);
+            userInfo.add(name);
+            userInfo.add(address);
+            return Users.fromJson(userDetail.data());
           } else {
             return Future.value('No user Data');
           }
         });
-        return role;
+        return userInfo;
       } catch (e) {
-        return Future.value('document error');
+        return e;
       }
     } catch (e) {
-      return Future.value('get user error');
+      return e;
     }
   }
 
@@ -76,12 +82,12 @@ class Auth {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       return "Signed In";
-    } on FirebaseAuthException catch (e) {
+    }catch (e) {
       return e.message;
     }
   }
 
-  Future<String> singUp({String email, String password}) async {
+  Future<String> singUp({String email, String password,String fullname,String adress}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -90,6 +96,8 @@ class Auth {
         'uid': user,
         'role': 'user',
         'email': email,
+        'fullname':fullname,
+        'adress':adress,
         'time': Timestamp.now(),
       });
       return "Registration succesfull";
@@ -118,7 +126,21 @@ class Auth {
       return e.toString();
     }
   }
+  Future<String> editUser(
+     String fullname,String address)async{
+      try {
+        DocumentReference documentReference =
+          _firestore.collection('Users').doc((_firebaseAuth.currentUser).uid);
+      await documentReference.update({
+        "fullname": fullname,
+        "adress": address,
+      });
 
+      } catch (e) {
+        return e;
+      }
+      return 'Error';
+    }
   Future<String> editItem(
       {String name,
       String price,

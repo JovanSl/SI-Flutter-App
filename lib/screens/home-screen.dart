@@ -28,7 +28,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     animationController.addListener(() {
       setState(() {});
     });
-    dbAuth.userRole().then((value) => setState(() {
+    dbAuth.userInfo().then((value) => setState(() {
           userRole = value.toString();
         }));
     super.initState();
@@ -37,7 +37,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('V1'),
+        title: Text('V1',style:TextStyle(color: Colors.white,fontWeight: FontWeight.w900),),
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: <Widget>[appbarCartIcon(context)],
@@ -54,7 +54,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 children: <Widget>[
                   IfAdmin(),
                   CircluarButton(
-                    color: Colors.blue,
+                    color: Colors.black,
                     width: 50,
                     height: 50,
                     icon: Icon(

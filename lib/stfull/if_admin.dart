@@ -18,7 +18,7 @@ String userRole;
 class _IfAdminState extends State<IfAdmin> {
   @override
   Widget build(BuildContext context) => FutureBuilder(
-      future: dbAuth.userRole().then((value) => {userRole = value.toString()}),
+      future: dbAuth.userInfo().then((value) => {userRole=value[0]}),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (userRole == 'admin') {
@@ -39,8 +39,9 @@ class _IfAdminState extends State<IfAdmin> {
                 StackButtons(Colors.red, Icons.logout, () {
                   context.read<Auth>().signOut();
                 }, 55),
-                StackButtons(Colors.indigo, Icons.person, () {
-                  print("profile");
+                StackButtons(Colors.indigo, Icons.person, ()  {
+                 Navigator.pushNamed(context, '/profile');
+                  print("Profile screen");
                 }, 110),
                 StackButtons(Colors.green, Icons.history_sharp, () {
                  Navigator.pushNamed(context, '/orders');
@@ -52,12 +53,21 @@ class _IfAdminState extends State<IfAdmin> {
             return Stack(
                 alignment: AlignmentDirectional.bottomStart,
                 children: <Widget>[
+                  IgnorePointer(
+                  ignoring: (animationController.isCompleted) ? false : true,
+                  child: Container(
+                    color: Colors.transparent,
+                    height: 270.0,
+                    width: 50.0,
+                  ),
+                ),
                   StackButtons(Colors.red, Icons.logout, () {
-                    print("logout");
-                  }, 55),
+                  context.read<Auth>().signOut();
+                }, 55),
                   StackButtons(Colors.indigo, Icons.person, () {
-                    print("profile");
-                  }, 110),
+                 Navigator.pushNamed(context, '/profile');
+                  print("Profile screen");
+                }, 110),
                   StackButtons(Colors.green, Icons.history_sharp, () {
                     print("order history");
                   }, 165),

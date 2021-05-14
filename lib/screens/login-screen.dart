@@ -25,11 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Flexible(
+              Center(
                 child: Container(
-                  color: Colors.grey[50],
-                  height: 200.0,
-                  child: Text("LOGIN"),
+                  child: Text("LOGIN",style:TextStyle(fontSize: 50,fontWeight: FontWeight.bold),),
                 ),
               ),
               SizedBox(
@@ -58,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 24.0,
               ),
               RoundedButton(
-                  colour: Colors.blueAccent,
+                  colour: Colors.black,
                   title: 'LogIn',
                   widget: () {
                     context

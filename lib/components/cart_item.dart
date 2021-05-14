@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:v1/models/cart-items.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class CartPdt extends StatelessWidget {
+class CartI extends StatelessWidget {
   final String id;
   final String productId;
   final String price;
@@ -12,7 +12,7 @@ class CartPdt extends StatelessWidget {
   final String description;
   final String image;
 
-  CartPdt(this.id, this.productId, this.price, this.quantity, this.name,
+  CartI(this.id, this.productId, this.price, this.quantity, this.name,
       this.description, this.image);
 
   @override

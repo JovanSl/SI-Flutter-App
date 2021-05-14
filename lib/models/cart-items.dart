@@ -1,75 +1,68 @@
 import 'package:flutter/material.dart';
 
 class CartItem extends ChangeNotifier{
-  final String id;
-  final String name;
-  final int quantity;
-  final String price;
-  final String description;
-  final String image;
+   String id;
+   String name;
+   int quantity;
+   String price;
+   String description;
+   String image;
+   double total;
 
   CartItem(
       { 
-      @required this.id,
-      @required this.name,
-      @required this.quantity,
-      @required this.price,
+       this.id,
+       this.name,
+       this.quantity,
+       this.price,
        this.description,
-       this.image,});
+       this.image,
+       this.total});
 
-  //   Map<String, dynamic> toMap() {
-  //   final Map<String, dynamic> data = new Map<String, dynamic>();
-  //   data['id'] = this.id;
-  //   data['name'] = this.name;
-  //   data['quantity'] = this.quantity;
-  //   data['price'] = this.price;
-  //   return data;
-  // }
     Map<String, dynamic> toMap() {
     return {
       'id': this.id,
       'name': this.name,
       'quantity':this.quantity,
       'price': this.price,
+      'total':this.total,
     };
   }
-
-  factory CartItem.fromJson(Map<String, dynamic> json) {
+ factory CartItem.fromMap(Map<String,dynamic> data){
     return CartItem(
-      id:json['id'],
-      name: json['name'],
-      quantity: json['quantity'],
-      price: json['price'],
-      description:json['description'],
-      image:json['image']
+    id:data['id'],
+    name:data['name'],
+    quantity:data['quantity'],
+    price:data['price'],
     );
   }
 }
 class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {};
   List<CartItem> cart;
-  Cart({this.cart});
+  int total;
+  Cart({this.cart,this.total});
+
   Map<String, CartItem> get items {
     return {..._items};
   }
+
     Map<String, dynamic> toMap() {
     return {
       'cart': cart.map((i) => i.toMap()).toList(),
     };
   }
-  // Map<String,dynamic> toJson(){
-  //   final Map<String,dynamic> data=new Map<String,dynamic>();
-  //   if (this.cart != null) {
-  //     data['cart'] = this.cart.map((v) => v.toJson()).toList();
-  //   }
-  // }
-  factory Cart.fromJson(dynamic json) {
-    List<CartItem> cart = (json as List).map((i) {
-      return CartItem.fromJson((i));
-    }).toList();
-    return Cart(cart: cart);
-  }
 
+  factory Cart.fromMap(Map<String, dynamic> data) {
+    var carts = data['cart'] as List;
+
+    List<CartItem> cartItemList=carts.map((e) => CartItem.fromMap(data)).toList();
+
+    return Cart(
+      cart:cartItemList,
+      total:data['total'],
+    );
+  }
 
   int get itemCount {
     return _items.length;

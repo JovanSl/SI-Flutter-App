@@ -1,16 +1,13 @@
 class Users {
-  final String id;
-  final String email;
-  final String userRole;
+   String id;
+   String email;
+   String userRole;
 
-  const Users({this.id, this.email, this.userRole});
+   Users({this.id, this.email, this.userRole});
 
-  Users.fromData(Map<String, dynamic>data)
-      : id = data['id'],
-        email = data['email'],
+  Users.fromJson(Map<String, dynamic>data){
+       id = data['id'];
+        email = data['email'];
         userRole = data['role'];
-  
-    String get userrole { 
-      return userRole; 
-   } 
+  }
 }

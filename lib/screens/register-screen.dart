@@ -11,8 +11,14 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool showSpinner = false;
-  String email;
-  String password;
+  String email, password, adress, fullname;
+  bool _showPassword = false;
+  void _togglevisibility() {
+    setState(() {
+      _showPassword = !_showPassword;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,17 +31,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Flexible(
+              Center(
                 child: Container(
-                  color: Colors.grey[50],
-                  height: 200.0,
-                  child: Text("REGISTER"),
+                  child: Text("REGISTER",style:TextStyle(fontSize: 50,fontWeight: FontWeight.bold),),
                 ),
               ),
               SizedBox(
                 height: 48.0,
               ),
               TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter email adress',
+                ),
                 keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
@@ -47,23 +54,65 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 8.0,
               ),
               TextField(
-                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Enter password',
+                  prefixIcon: Container(width: 0,),
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      _togglevisibility();
+                    },
+                    child: Icon(
+                      _showPassword ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                obscureText: !_showPassword,
                 textAlign: TextAlign.center,
+
                 onChanged: (value) {
                   password = value;
                 },
                 //decoration:null,
               ),
               SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter full name',
+                ),
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  fullname = value;
+                },
+                //decoration: null,
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter address ',
+                ),
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  adress = value;
+                },
+                //decoration: null,
+              ),
+              SizedBox(
                 height: 24.0,
               ),
               RoundedButton(
-                  colour: Colors.blueAccent,
+                  colour: Colors.black,
                   title: 'Register',
                   widget: () {
-                    context
-                        .read<Auth>()
-                        .singUp(email: email.trim(), password: password.trim());
+                    context.read<Auth>().singUp(
+                        email: email.trim(),
+                        password: password.trim(),
+                        fullname: fullname.trim(),
+                        adress: adress.trim());
                   }),
             ],
           ),
