@@ -139,6 +139,16 @@ class _AddItemState extends State<AddItem> {
                                   image: (_image == null) ? image : _image,
                                   itemId: widget.itemId,
                                 );
+                                 ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(milliseconds: 1500),
+                          backgroundColor: Colors.black,
+                          content:  Text(
+                            'Successfuly edited ${titleTextController.text}',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -159,6 +169,16 @@ class _AddItemState extends State<AddItem> {
                                     descriptionTextController.text.trim(),
                                 image: _image,
                               );
+                               ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(milliseconds: 1500),
+                          backgroundColor: Colors.black,
+                          content:  Text(
+                            'Successfuly added ${titleTextController.text}',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
                           Navigator.pushNamed(context, '/home');
                         }),
                 SizedBox(

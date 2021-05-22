@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:v1/db/auth.dart';
+import 'package:v1/screens/add-item-screen.dart';
 import 'package:v1/screens/item-screen.dart';
+import 'package:provider/provider.dart';
 
 class ItemsList extends StatelessWidget {
   ItemsList(
@@ -32,7 +35,7 @@ class ItemsList extends StatelessWidget {
                   description: description),
             ));
       },
-      child: userRole != 'admin'
+      child: userRole == 'admin'
           ? Slidable(
               actionPane: SlidableDrawerActionPane(),
               actionExtentRatio: 0.25,
@@ -46,13 +49,32 @@ class ItemsList extends StatelessWidget {
                   caption: 'Edit',
                   color: Colors.green,
                   icon: Icons.add,
-                  onTap: () => null,
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddItem(
+                                name,
+                                price,
+                                description,
+                                image,
+                                itemId))),
                 ),
                 IconSlideAction(
                   caption: 'Delete',
                   color: Colors.red,
                   icon: Icons.delete,
-                  onTap: () => null,
+                  onTap: (){ context.read<Auth>().deleteItem(itemId);
+                   ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(milliseconds: 1500),
+                          backgroundColor: Colors.black,
+                          content:  Text(
+                            'Item deleted',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
+                      Navigator.pushNamed(context, '/home');}
                 ),
               ],
             )

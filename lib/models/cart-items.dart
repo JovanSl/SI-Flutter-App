@@ -7,7 +7,6 @@ class CartItem extends ChangeNotifier{
    String price;
    String description;
    String image;
-   double total;
 
   CartItem(
       { 
@@ -16,8 +15,7 @@ class CartItem extends ChangeNotifier{
        this.quantity,
        this.price,
        this.description,
-       this.image,
-       this.total});
+       this.image,});
 
     Map<String, dynamic> toMap() {
     return {
@@ -25,7 +23,6 @@ class CartItem extends ChangeNotifier{
       'name': this.name,
       'quantity':this.quantity,
       'price': this.price,
-      'total':this.total,
     };
   }
  factory CartItem.fromMap(Map<String,dynamic> data){
@@ -60,7 +57,6 @@ class Cart with ChangeNotifier {
 
     return Cart(
       cart:cartItemList,
-      total:data['total'],
     );
   }
 

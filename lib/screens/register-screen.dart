@@ -13,6 +13,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool showSpinner = false;
   String email, password, adress, fullname;
   bool _showPassword = false;
+    _validEmail(String validEmail) {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(validEmail);
+    return emailValid;
+  }
   void _togglevisibility() {
     setState(() {
       _showPassword = !_showPassword;
@@ -108,12 +114,70 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   colour: Colors.black,
                   title: 'Register',
                   widget: () {
-                    context.read<Auth>().singUp(
+                    if (email == null || password == null || adress== null || fullname==null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.black,
+                          content: const Text(
+                            'All fields must contain value',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
+                    } else if (_validEmail(email) != true) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.black,
+                          content: const Text(
+                            'Email address format is incorrect',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
+                    } else if (password.length < 6) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.black,
+                          content: const Text(
+                            'Password must be at least 6 characters long',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
+                    } else {
+                      try{
+                        context.read<Auth>().singUp(
                         email: email.trim(),
                         password: password.trim(),
                         fullname: fullname.trim(),
                         adress: adress.trim());
-                  }),
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.black,
+                          content: const Text(
+                            'Account successfuly created',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
+                       Navigator.pushNamed(context, '/login');
+                      }catch (e){
+                        print(e);
+                      }                  
+                    }
+                      
+                    
+                  },),
+                  Center(
+                child: Container(
+                  child: GestureDetector(
+                      child: Text(
+                        'Back to LogIn',
+                        style: TextStyle(fontSize:15,color: Colors.grey[500]),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, '/login')),
+                ),
+              ),
             ],
           ),
         ),

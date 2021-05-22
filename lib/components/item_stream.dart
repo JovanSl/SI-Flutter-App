@@ -5,10 +5,11 @@ import 'package:v1/components/item_list.dart';
 
 final FirebaseAuth auth = FirebaseAuth.instance;
 final _firestore = FirebaseFirestore.instance;
-AnimationController animationController;
-Animation transitionAnimation;
 
+// ignore: must_be_immutable
 class ItemsStream extends StatelessWidget {
+  ItemsStream(this.userRole);
+    String userRole;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -35,6 +36,7 @@ class ItemsStream extends StatelessWidget {
               image: image,
               description: description,
               itemId: itemId,
+              userRole: userRole,
             );
             itemsLists.add(itemsList);
           }

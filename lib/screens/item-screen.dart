@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:v1/components/round_button.dart';
-import 'package:v1/db/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:v1/models/cart-items.dart';
-import 'package:v1/screens/add-item-screen.dart';
 import 'package:v1/components/appbar_cart_icon.dart';
 
 class ItemScreen extends StatefulWidget {
@@ -47,78 +45,70 @@ class _ItemScreenState extends State<ItemScreen> {
         title: Text(widget.name),
       ),
       body: Container(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: AspectRatio(
-                      aspectRatio: 1.4, child: Image.network(widget.image)),
+        child: SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                children: <Widget>[
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: AspectRatio(
+              aspectRatio: 1.4, child: Image.network(widget.image)),
+        ),
+        SizedBox(height: 40,),
+        Container(
+          child: Text(widget.name,style: TextStyle(fontSize: 30)),
+        ),
+        SizedBox(height: 10,),
+        Container(
+          child: Text("${widget.price} RSD",style: TextStyle(fontSize: 20),),
+        ),
+        SizedBox(height: 50,),
+        Container(
+          width: MediaQuery.of(context).size.width-50,
+          child: Text(widget.description,style: TextStyle(fontSize: 17)),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FloatingActionButton(
+                heroTag: "fab1",
+                child: Icon(
+                  Icons.remove,
                 ),
-                Container(
-                  child: Text(widget.name),
+                onPressed: _decrementCounter),
+            SizedBox(width: 30),
+            Text('$_counter'),
+            SizedBox(width: 30),
+            FloatingActionButton(
+                heroTag: "fab2",
+                child: Icon(
+                  Icons.add,
                 ),
-                Container(
-                  child: Text(widget.price),
+                onPressed: _incrementCounter)
+          ],
+        ),
+         RoundedButton(
+            colour: Colors.green,
+            title: 'Add to cart',
+            widget: () {
+              cart.addItem(widget.itemId, widget.name, widget.price,
+                  widget.description, widget.image, _counter);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(milliseconds: 1500),
+                  backgroundColor: Colors.black,
+                  content:  Text(
+                    'Added $_counter ${widget.name} to cart',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
-                Container(
-                  child: Text(widget.description),
-                ),
-                RoundedButton(
-                  colour: Colors.green,
-                  title: 'Edit',
-                  widget: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddItem(
-                                widget.name,
-                                widget.price,
-                                widget.description,
-                                widget.image,
-                                widget.itemId)));
-                  },
-                ),
-                RoundedButton(
-                    colour: Colors.red,
-                    title: 'Delete',
-                    widget: () {
-                      context.read<Auth>().deleteItem(widget.itemId);
-                      Navigator.pushNamed(context, '/home');
-                    }),
-                RoundedButton(
-                    colour: Colors.indigo,
-                    title: 'Add to cart',
-                    widget: () {
-                      cart.addItem(widget.itemId, widget.name, widget.price,
-                          widget.description, widget.image, _counter);
-                    }),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FloatingActionButton(
-                        heroTag: "fab1",
-                        child: Icon(
-                          Icons.remove,
-                        ),
-                        onPressed: _decrementCounter),
-                    SizedBox(width: 30),
-                    Text('$_counter'),
-                    SizedBox(width: 30),
-                    FloatingActionButton(
-                        heroTag: "fab2",
-                        child: Icon(
-                          Icons.add,
-                        ),
-                        onPressed: _incrementCounter)
-                  ],
-                )
-              ],
+              );
+            }
+            ),
+                ],
+              ),
             ),
           ),
-        ),
       ),
     );
   }

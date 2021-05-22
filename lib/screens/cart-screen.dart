@@ -6,6 +6,8 @@ import 'package:v1/models/cart-items.dart';
 import 'package:v1/components/cart_item.dart';
 
 var total;
+List<List> x=[];
+List<String> y=[];
 
 class CartScreen extends StatelessWidget {
   @override
@@ -32,20 +34,40 @@ class CartScreen extends StatelessWidget {
                           cart.items.values.toList()[index].name,
                           cart.items.values.toList()[index].description,
                           cart.items.values.toList()[index].image),
+                          
                     ),
                   )
                 : Expanded(child: Center(child: Text("Your cart is empty"))),
-            RoundedButton(
-              colour: Colors.green,
-              widget: () {
-                context.read<Auth>().placeOrder(
-                    cart.items.values.map((e) => e.toMap()).toList(),
-                    cart.totalAmount);
-                cart.clear();
-                Navigator.pushNamed(context, '/home');
-              },
-              title: 'Checkout total: ${cart.totalAmount} RSD',
-            ),
+            cart.items.length < 1
+                ? RoundedButton(
+                    colour: Colors.grey,
+                    widget: () {
+                      print('null');
+                    },
+                    title: 'Cart is empty',
+                  )
+                : RoundedButton(
+                    colour: Colors.green,
+                    widget: () {
+                      context.read<Auth>().placeOrder(
+                          cart.items.values.map((e) => e.toMap()).toList(),
+                          cart.totalAmount);
+                      cart.clear();
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/home');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(milliseconds: 1500),
+                  backgroundColor: Colors.black,
+                  content:  Text(
+                    'Order created',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              );
+                    },
+                    title: 'Checkout total: ${cart.totalAmount} RSD',
+                  ),
           ],
         ));
   }

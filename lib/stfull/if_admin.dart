@@ -34,18 +34,20 @@ class _IfAdminState extends State<IfAdmin> {
                   ),
                 ),
                 StackButtons(Colors.yellow[800], Icons.add, () {
+                  Navigator.pop(context);
                   Navigator.pushNamed(context, '/addItem');
                 }, 220),
                 StackButtons(Colors.red, Icons.logout, () {
+                  Navigator.pop(context);
                   context.read<Auth>().signOut();
                 }, 55),
                 StackButtons(Colors.indigo, Icons.person, ()  {
+                  Navigator.pop(context);
                  Navigator.pushNamed(context, '/profile');
-                  print("Profile screen");
                 }, 110),
                 StackButtons(Colors.green, Icons.history_sharp, () {
+                  Navigator.pop(context);
                  Navigator.pushNamed(context, '/orders');
-                  print("order history");
                 }, 165),
               ],
             );
@@ -62,14 +64,16 @@ class _IfAdminState extends State<IfAdmin> {
                   ),
                 ),
                   StackButtons(Colors.red, Icons.logout, () {
+                    Navigator.pop(context);
                   context.read<Auth>().signOut();
                 }, 55),
                   StackButtons(Colors.indigo, Icons.person, () {
+                    Navigator.pop(context);
                  Navigator.pushNamed(context, '/profile');
-                  print("Profile screen");
                 }, 110),
                   StackButtons(Colors.green, Icons.history_sharp, () {
-                    print("order history");
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/orders');
                   }, 165),
                 ]);
           }

@@ -45,7 +45,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       body: Container(
         child: Stack(
           children: <Widget>[
-            ItemsStream(),
+            FutureBuilder
+            (future:dbAuth.userInfo().then((value) => {userRole=value[0]}),
+            builder: (context,snapshot){
+               return  Stack(children:<Widget>[
+                  ItemsStream(userRole),
             Positioned(
               right: 30,
               bottom: 30,
@@ -72,6 +76,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 ],
               ),
             ),
+                ]);
+            }),
           ],
         ),
       ),

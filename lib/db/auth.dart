@@ -54,10 +54,10 @@ class Auth {
         });
         return userInfo;
       } catch (e) {
-        return e;
+       return null;
       }
     } catch (e) {
-      return e;
+      return null;
     }
   }
 
@@ -81,10 +81,17 @@ class Auth {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      return "Signed In";
-    }catch (e) {
-      return e.message;
+          return Future.value('Success');
+    }on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+       return Future.value('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+       return Future.value('Wrong password provided for that user.');
+      }
+    }catch (e){
+      return Future.value(e);
     }
+    return Future.value('error');
   }
 
   Future<String> singUp({String email, String password,String fullname,String adress}) async {
@@ -100,9 +107,9 @@ class Auth {
         'adress':adress,
         'time': Timestamp.now(),
       });
-      return "Registration succesfull";
+      return Future.value('Success');
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      return Future.value(e.message);
     }
   }
 

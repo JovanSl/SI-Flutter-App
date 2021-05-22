@@ -42,6 +42,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     nameTextController.text.trim(),
                     addressTextController.text.trim()
                   );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.black,
+                          content: const Text(
+                            'Successfully updated',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      );
                     _toggleEdit();
                 },
               ):
