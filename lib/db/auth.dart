@@ -1,15 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:v1/models/user.dart';
-
 class Auth {
   String role = '';
   Auth(this._firebaseAuth);
   final FirebaseAuth _firebaseAuth;
   final _firestore = FirebaseFirestore.instance;
 
-  Future<dynamic>placeOrder(cartItem,totalPrice)async{
+  Future<dynamic>placeOrder(cartItem,totalPrice,email,address)async{
   var user;
       user = await getCurrentUID();
     try {
@@ -21,6 +19,8 @@ class Auth {
         'id': documentReference.id,
         'time': Timestamp.now(),
         'userId': user,
+        'userEmail':email,
+        'address':address
       });
       return "Added succesfull";
     } catch (e) {
@@ -31,10 +31,13 @@ class Auth {
   }
   Future<List> userInfo() async {
     var user,address,name;
+    
     var userInfo=[];
     try {
-      user = await getCurrentUID();
-      try {
+       user = await getCurrentUID();
+        if(user!="" || user!=null){
+          try {
+                
         await _firestore
             .collection('Users')
             .doc(user)
@@ -47,33 +50,39 @@ class Auth {
             userInfo.add(role);
             userInfo.add(name);
             userInfo.add(address);
-            return Users.fromJson(userDetail.data());
+            return userInfo;
           } else {
             return Future.value('No user Data');
           }
         });
         return userInfo;
-      } catch (e) {
-       return null;
-      }
+          } catch (e) {
+            print("e");
+          }
+        }
+        return userInfo;
+      
     } catch (e) {
-      return null;
+      print(e);
     }
+      return userInfo; 
   }
 
-  // GET UID
   Future<String> getCurrentUID() async {
-    return (_firebaseAuth.currentUser).uid;
+      return _firebaseAuth.currentUser.uid;
   }
 
-  // GET CURRENT USER
   Future getCurrentUser() async {
     return _firebaseAuth.currentUser;
   }
-
-  Future<void> singOut() async {
-    await _firebaseAuth.signOut();
-  }
+  Future<void> signOut() async {
+    try {
+       await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e);
+    }
+ 
+}
 
   Stream<User> get authStateChanges => _firebaseAuth.idTokenChanges();
 
@@ -210,8 +219,4 @@ class Auth {
         .then((value) => print("Item Deleted"))
         .catchError((error) => print("Failed to delete item: $error"));
   }
-
-  Future<void> signOut() async {
-  await FirebaseAuth.instance.signOut();
-}
 }

@@ -12,6 +12,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 
 Auth dbAuth = new Auth(auth);
 String userRole, fullName, address;
+  final uid=auth.currentUser.uid;
 
 class _ProfileScreenState extends State<ProfileScreen> {
    var nameTextController = TextEditingController();
@@ -64,7 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
                 ),
             ],
-            automaticallyImplyLeading: true,
             title: Text('PROFILE'),
           ),
           body: Center(

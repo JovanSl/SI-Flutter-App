@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:v1/db/auth.dart';
 import 'package:v1/models/cart-items.dart';
+import 'package:v1/screens/init.dart';
 import 'screens/login-screen.dart';
 import 'screens/register-screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +13,8 @@ import 'screens/item-screen.dart';
 import 'screens/cart-screen.dart';
 import 'screens/orders-screen.dart';
 import 'screens/profile-screen.dart';
+
+final FirebaseAuth auth = FirebaseAuth.instance;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -49,6 +52,7 @@ class Ver1 extends StatelessWidget {
             '/cart': (context) => CartScreen(),
             '/orders':(context)=>OrdersScreen(),
             '/profile':(context)=>ProfileScreen(),
+            '/init':(context)=>PreScreen(),
           }),
     );
   }

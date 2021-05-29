@@ -41,7 +41,6 @@ class _ItemScreenState extends State<ItemScreen> {
       appBar: AppBar(
         centerTitle: true,
         actions: <Widget>[appbarCartIcon(context)],
-        automaticallyImplyLeading: false,
         title: Text(widget.name),
       ),
       body: Container(

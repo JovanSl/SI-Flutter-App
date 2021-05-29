@@ -1,43 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:v1/components/circular_button.dart';
 import 'package:v1/components/item_stream.dart';
-import 'package:v1/stfull/if_admin.dart';
+import 'package:v1/db/auth.dart';
 import 'package:v1/components/appbar_cart_icon.dart';
+import 'package:v1/stfull/if_admin_bottom_bar.dart';
 
-AnimationController animationController;
-Animation transitionAnimation;
-
-double getRadians(double degree) {
-  double unitRadian = 57.295779513;
-  return degree / unitRadian;
-}
+final FirebaseAuth auth = FirebaseAuth.instance;
+var userRole;
+final Auth dbAuth = new Auth(auth);
+var b=auth.currentUser.uid;
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with TickerProviderStateMixin {
+class _HomeState extends State<Home> {
   @override
   void initState() {
-    animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 125));
-    transitionAnimation =
-        Tween(begin: 0.0, end: 1.0).animate(animationController);
-    animationController.addListener(() {
-      setState(() {});
-    });
-    dbAuth.userInfo().then((value) => setState(() {
-          userRole = value.toString();
-        }));
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: IfAdminBottomBar(0),
       appBar: AppBar(
-        title: Text('V1',style:TextStyle(color: Colors.white,fontWeight: FontWeight.w900),),
+        title: Text(
+          'V1',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+        ),
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: <Widget>[appbarCartIcon(context)],
@@ -45,39 +38,23 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       body: Container(
         child: Stack(
           children: <Widget>[
-            FutureBuilder
-            (future:dbAuth.userInfo().then((value) => {userRole=value[0]}),
-            builder: (context,snapshot){
-               return  Stack(children:<Widget>[
-                  ItemsStream(userRole),
-            Positioned(
-              right: 30,
-              bottom: 30,
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: <Widget>[
-                  IfAdmin(),
-                  CircluarButton(
-                    color: Colors.black,
-                    width: 50,
-                    height: 50,
-                    icon: Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    ),
-                    onClick: () {
-                      if (animationController.isCompleted) {
-                        animationController.reverse();
-                      } else {
-                        animationController.forward();
+            Stack(children: <Widget>[
+              FutureBuilder(
+                  future: dbAuth
+                      .userInfo(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    } else {
+                      userRole = snapshot.data[0];
+                      if (userRole != 'admin') {
+                        userRole = 'user';
+                        return ItemsStream(userRole);
                       }
-                    },
-                  ),
-                ],
-              ),
-            ),
-                ]);
-            }),
+                      return ItemsStream(userRole);
+                    }
+                  }),
+            ]),
           ],
         ),
       ),
@@ -85,6 +62,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 }
+
 class MessageHandler extends StatefulWidget {
   @override
   _MessageHandlerState createState() => _MessageHandlerState();
@@ -96,33 +74,30 @@ class _MessageHandlerState extends State<MessageHandler> {
   void initState() {
     super.initState();
     _firebaseMessaging.configure(
-        onMessage: (Map<String,dynamic>message)async{
-          print('onMessage: $message');
-          showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                content: ListTile(
-                  title: Text(message['notification']['title']),
-                  subtitle: Text(message['notification']['body']),
-                ),
-                actions: <Widget>[
-                  ElevatedButton(
-                    child: Text('Ok'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ],
-              ),
-        );
-        },
-         onResume: (Map<String,dynamic>message)async{
-          print('onResume: $message');
-          
-        },
-         onLaunch: (Map<String,dynamic>message)async{
-          print('onLaunch: $message');
-        }
-    );
+        onMessage: (Map<String, dynamic> message) async {
+      print('onMessage: $message');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: ListTile(
+            title: Text(message['notification']['title']),
+            subtitle: Text(message['notification']['body']),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text('Ok'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    }, onResume: (Map<String, dynamic> message) async {
+      print('onResume: $message');
+    }, onLaunch: (Map<String, dynamic> message) async {
+      print('onLaunch: $message');
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Container();

@@ -104,7 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       try{
                         context.read<Auth>().singIn(
                           email: email.trim(), password: password.trim());
-                           Navigator.pushNamed(context, '/home');
+                           Navigator.pop(context);
+                           Navigator.pushNamed(context, '/init');
+                           
                       }catch (e){
                          ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
